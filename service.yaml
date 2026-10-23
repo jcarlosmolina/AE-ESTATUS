@@ -14,5 +14,5 @@ spec:
     app: ae-estatus
   ports:
     - protocol: TCP
-      port: 8089
-      targetPort: 8089
+      port: 8102
+      targetPort: 8102

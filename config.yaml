@@ -34,4 +34,4 @@ data:
   ae-generasolicitud-url: 'https://ae-generasolicitud:8088'
 # Use this configuration if microservice ae-estatus uses its own database
   ae-estatus-database-jdbc-url: 'jdbc:oracle:thin:@localhost:1521/ORCL'
-  ae-estatus-url: 'https://ae-estatus:8089'
+  ae-estatus-url: 'https://ae-estatus:8102'

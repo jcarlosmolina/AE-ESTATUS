@@ -130,6 +130,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
+import org.eclipse.microprofile.rest.client.inject.RestClient;
 import org.slf4j.LoggerFactory;
 
 @Transactional
@@ -221,6 +222,9 @@ public class SolicitudService extends AbstractService {
     ErrorWSService errorWSSrv;
 
     UserFunctions userFunctionsSrv;
+
+    @RestClient
+    SolicitudServiceAEEnvioDoc solicitudServiceAEEnvioDoc;
 
     @Inject
     public SolicitudService(
@@ -1010,7 +1014,20 @@ public class SolicitudService extends AbstractService {
             comparison6.setSecondOperand(new SQLWhereOperandLiteral(voEstado, Constants.Type.INT.getTypeName()));
             conjunction.addOperand(comparison6);
 
-        }        
+        } else {
+            // Que no sea el estado RECIBIDO (8)
+            SQLWhereComparison comparison6 = new SQLWhereComparison(sql);
+            comparison6.setOperator("<>");
+            
+            // Estado
+            SQLWhereOperandPathAttribute operand117 = new SQLWhereOperandPathAttribute(SolicitudConstants.ATTR_NAME_SOLICITUDESTADO, Constants.Type.INT.getTypeName());
+            comparison6.setFirstOperand(operand117);
+            
+            // Literal 8
+            comparison6.setSecondOperand(new SQLWhereOperandLiteral(8, Constants.Type.INT.getTypeName()));
+            conjunction.addOperand(comparison6);
+        	
+        }
 
         // Aesolicitudes.Fechaasignacion >= vFElabIni
         if (vFElabIni != null) {
@@ -17472,16 +17489,9 @@ public class SolicitudService extends AbstractService {
         request.checkArguments();
         Solicitud instance = solicitudTENVIARDOCAUTOAUXpthisSolicitud;
 
-        /* Action 1: IF (1 > 2) */
-        boolean ifCondition1 = Long.valueOf(1) > Long.valueOf(2);
-        if (ifCondition1) {
-            com.keralty.aeestatus.viewmodel.solicitud.siu.TENVIARDOCAUTOAUXRequest step10Request = new com.keralty.aeestatus.viewmodel.solicitud.siu.TENVIARDOCAUTOAUXRequest();
-            step10Request.setSolicitudTENVIARDOCAUTOAUXpthisSolicitudInstance(solicitudTENVIARDOCAUTOAUXpthisSolicitud);
-            solicitudSrv.tENVIARDOCAUTOAUXImplementation(step10Request);
-        }
-
-        response.setInstance(getByOID(instance.getOid()));
-        response.setInstanceSuppInfo(instance.buildICSolicitud());
+        com.keralty.aeestatus.viewmodel.solicitud.siu.TENVIARDOCAUTOAUXRequest requestParaEnvioDoc = new com.keralty.aeestatus.viewmodel.solicitud.siu.TENVIARDOCAUTOAUXRequest();
+        requestParaEnvioDoc.setSolicitudTENVIARDOCAUTOAUXpthisSolicitudInstance(instance);
+        solicitudServiceAEEnvioDoc.tENVIARDOCAUTOAUX(requestParaEnvioDoc);
 
         return response;
     }

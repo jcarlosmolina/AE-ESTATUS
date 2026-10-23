@@ -78,4 +78,10 @@ public class TokenUtilities {
 			return TokenUtilities.getInstance().jwt.getRawToken();
 		return "";
 	}
+	
+	public static String getToken4msenviodoc() {
+		if (TokenUtilities.getInstance().jwt != null)
+			return TokenUtilities.getInstance().jwt.getRawToken();
+		return "";
+	}
 }
